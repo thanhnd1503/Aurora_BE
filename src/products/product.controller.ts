@@ -1,16 +1,16 @@
 import { Controller, Get, HttpStatus } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { ProductService } from './products.service';
 import { Product } from './entities/product.entity';
-import { ApiResponse } from './dtos/api-response';
+import { ApiResponse } from '../config/api-response';
 
 @Controller('products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
 
   @Get()
   async getProductList(): Promise<ApiResponse<Product[]>> {
     try {
-      const data = await this.productsService.getProductList();
+      const data = await this.productService.getProductList();
 
       return {
         success: true,
