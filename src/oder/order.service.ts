@@ -28,7 +28,6 @@ export class OrderService {
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    // console.log('createOrderDto.customerId', createOrderDto.customerId);
 
     try {
       // 1. Kiểm tra customer (trong transaction)
@@ -81,7 +80,7 @@ export class OrderService {
         product.stock -= itemDto.quantity;
         await queryRunner.manager.save(product);
       }
-      console.log('orderItems', orderItems);
+
       // 3. Tạo và lưu order
       const order = queryRunner.manager.create(Order, {
         orderDate: new Date(),
@@ -93,7 +92,7 @@ export class OrderService {
 
       const savedOrder = await queryRunner.manager.save(order);
 
-      const newOrderItems = await Promise.all(
+      await Promise.all(
         orderItems.map(async (item) => {
           const orderItem = queryRunner.manager.create(OrderItem, {
             quantity: item.quantity,
@@ -114,6 +113,7 @@ export class OrderService {
       return savedOrder;
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     } finally {
       // Giải phóng query runner

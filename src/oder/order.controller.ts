@@ -34,6 +34,7 @@ export class OrderController {
       throw new HttpException(
         {
           success: false,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           message: error.message,
           data: null,
         },
